@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Interface represents poly-named declaration, when one expression declares multiple entities with different names
  */
-public interface PerlPolyNamedElement extends PsiElement
+public interface PerlPolyNamedElement<T extends PerlDelegatingLightNamedElement> extends PsiElement
 {
 	/**
 	 * @return collecting map of names to identifiers
@@ -81,10 +81,10 @@ public interface PerlPolyNamedElement extends PsiElement
 	}
 
 	/**
-	 * Returns cached map of light elements, bound to the names identifiers, one for each name identifier
+	 * @return Map of light elements, bound to the names identifiers, one for each name identifier
 	 */
 	@NotNull
-	default Map<String, PerlDelegatingLightNamedElement> getLightElementsMap()
+	default Map<String, T> getLightElementsMap()
 	{
 		return CachedValuesManager.getCachedValue(this, () ->
 				CachedValueProvider.Result.create(calcLightElementsMap(), PerlPolyNamedElement.this));
@@ -94,10 +94,10 @@ public interface PerlPolyNamedElement extends PsiElement
 	 * @return Map of light elements, bound to the names identifiers, one for each name identifier
 	 */
 	@NotNull
-	default Map<String, PerlDelegatingLightNamedElement> calcLightElementsMap()
+	default Map<String, T> calcLightElementsMap()
 	{
 		List<String> namesList = getNamesList();
-		Map<String, PerlDelegatingLightNamedElement> result = new THashMap<>();
+		Map<String, T> result = new THashMap<>();
 
 		for (String name : namesList)
 		{
@@ -115,16 +115,17 @@ public interface PerlPolyNamedElement extends PsiElement
 	 * @return new light element
 	 */
 	@NotNull
-	default PerlDelegatingLightNamedElement createLightElement(@NotNull String name)
+	default T createLightElement(@NotNull String name)
 	{
-		return new PerlDelegatingLightNamedElement<>(this, name);
+		//noinspection unchecked
+		return (T) new PerlDelegatingLightNamedElement<PerlPolyNamedElement>(this, name);
 	}
 
 	/**
 	 * @return light element bound to the name identifier with name specified; null if unresolvable
 	 */
 	@Nullable
-	default PerlDelegatingLightNamedElement getLightElementByName(@NotNull String name)
+	default T getLightElementByName(@NotNull String name)
 	{
 		return getLightElementsMap().get(name);
 	}

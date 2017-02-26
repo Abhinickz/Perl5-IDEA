@@ -34,17 +34,17 @@ import javax.swing.*;
 /**
  * Created by hurricup on 26.11.2016.
  */
-public class PerlDelegatingLightElement<T extends PsiElement> extends LightElement
+public class PerlDelegatingLightElement<Delegate extends PsiElement> extends LightElement
 {
-	private final T myDelegate;
+	private final Delegate myDelegate;
 
-	public PerlDelegatingLightElement(T delegate)
+	public PerlDelegatingLightElement(Delegate delegate)
 	{
 		super(delegate.getManager(), delegate.getLanguage());
 		myDelegate = delegate;
 	}
 
-	public T getDelegate()
+	public Delegate getDelegate()
 	{
 		return myDelegate;
 	}
@@ -364,11 +364,6 @@ public class PerlDelegatingLightElement<T extends PsiElement> extends LightEleme
 
 		PerlDelegatingLightElement<?> element = (PerlDelegatingLightElement<?>) o;
 
-		if (!getDelegate().equals(element.getDelegate()))
-		{
-			return false;
-		}
-
-		return true;
+		return getDelegate().equals(element.getDelegate());
 	}
 }

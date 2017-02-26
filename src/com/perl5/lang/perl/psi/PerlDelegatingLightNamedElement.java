@@ -28,19 +28,20 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents one of the declarations of {@link PerlPolyNamedElement}
  */
-public class PerlDelegatingLightNamedElement<T extends PerlPolyNamedElement> extends PerlDelegatingLightElement<T>
+public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedElement> extends PerlDelegatingLightElement<Delegate>
 		implements PsiNameIdentifierOwner
 {
 	private final String myName;
 
-	public PerlDelegatingLightNamedElement(T delegate, String name)
+	public PerlDelegatingLightNamedElement(Delegate delegate, String name)
 	{
 		super(delegate);
 		myName = name;
 	}
 
+	// must not use stubs, because stubs accessors using it
 	@Override
-	public String getName()
+	public final String getName()
 	{
 		return myName;
 	}
